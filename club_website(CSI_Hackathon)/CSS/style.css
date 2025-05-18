@@ -1,0 +1,588 @@
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* Makes padding and border included in element's total width/height */
+}
+
+/* Define Color Palette using CSS Variables */
+:root {
+    --primary-color: #00FFFF; /* Electric Blue */
+    --secondary-color: #4B0082; /* Cyber Purple */
+    --accent-color: #39FF14; /* Neon Green */
+    --text-color-light: #F0F0F0; /* Off-White */
+    --text-color-dark: #1A1A1A; /* Very Dark Grey */
+    --overlay-color: rgba(0, 0, 0, 0.7); /* Semi-transparent dark overlay */
+}
+
+body {
+    font-family: 'Roboto Mono', monospace; /* Monospaced body font */
+    line-height: 1.6;
+    color: var(--text-color-light); /* Default text color is light for the dark background */
+    background-color: #0A0A0A; /* Fallback dark background color */
+    /* --- Main Background Image --- */
+    background-image: url('images/background.jpg'); /* Replace with your actual image path */
+    background-size: cover; /* Cover the entire viewport */
+    background-position: center; /* Center the image */
+    background-attachment: fixed; /* Make the background image fixed while scrolling */
+    background-repeat: no-repeat; /* Do not repeat the image */
+    overflow-x: hidden; /* Prevent horizontal scroll due to animations etc. */
+    position: relative; /* Needed for pseudo-element overlay */
+}
+
+/* Pseudo-element for a consistent dark overlay over the background image */
+body::before {
+    content: '';
+    position: fixed; /* Fixed position to cover the whole viewport */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Adjust opacity as needed */
+    z-index: -1; /* Place it behind the content, and also behind the canvas now */
+}
+
+/* Make the canvas cover the full fixed background */
+#hero-canvas {
+    position: fixed; /* Fixed position to cover the whole viewport */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    z-index: 0; /* *** CHANGED: Place it above the body overlay (-1) and section overlays (-1) but below content (1) *** */
+    pointer-events: none; /* Allow clicks to pass through the canvas */
+}
+
+
+h1, h2, h3 {
+    font-family: 'Orbitron', sans-serif; /* Orbitron for headings */
+    color: var(--primary-color); /* Heading color */
+    text-shadow: 0 0 5px var(--primary-color); /* Subtle glow effect */
+}
+
+a {
+    text-decoration: none; /* Remove underline from links */
+    color: var(--accent-color); /* Link color */
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    text-decoration: underline;
+    color: var(--primary-color); /* Change color on hover */
+}
+
+/* Container for centering content */
+.container {
+    width: 90%; /* Occupy 90% of the viewport width */
+    max-width: 1200px; /* But not wider than 1200px */
+    margin: 0 auto; /* Center the block element */
+    padding: 0 20px; /* Add some padding on the sides */
+    position: relative; /* Needed for z-index if background overlay is used */
+    z-index: 1; /* Ensure container content is above the canvas (0) and overlays (-1) */
+}
+
+/* Navigation Bar Styling */
+header {
+    background: rgba(0, 0, 0, 0.8); /* Semi-transparent dark background for header */
+    color: var(--text-color-light);
+    padding: 1rem 0;
+    position: sticky; /* Makes the header stick to the top */
+    top: 0;
+    z-index: 1000; /* Ensure it stays above other content */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); /* Stronger shadow for contrast */
+    backdrop-filter: blur(5px); /* Optional: Add a blur effect behind the header */
+}
+
+header .container {
+    display: flex; /* Use Flexbox for layout */
+    justify-content: space-between; /* Space out logo and nav links */
+    align-items: center; /* Vertically align items */
+}
+
+header h1 a {
+    color: var(--text-color-light);
+    font-size: 1.8rem;
+    text-shadow: none; /* Remove glow from header logo */
+}
+
+header nav ul {
+    list-style: none; /* Remove bullet points */
+    display: flex; /* Arrange list items horizontally */
+}
+
+header nav ul li {
+    margin-left: 20px;
+}
+
+header nav ul li a {
+    color: var(--text-color-light);
+    font-weight: bold;
+    transition: color 0.3s ease; /* Smooth color transition on hover */
+    text-decoration: none;
+}
+
+header nav ul li a:hover {
+    color: var(--accent-color); /* Change color on hover */
+    text-decoration: underline;
+}
+
+/* General Section Styling */
+.section {
+    padding: 80px 0; /* Add vertical padding to sections */
+    text-align: center; /* Center text within sections by default */
+    position: relative; /* Needed for section-specific overlays */
+    z-index: 1; /* Ensure section content is above body overlay and canvas */
+}
+
+/* Add a semi-transparent overlay to sections for readability over the background image */
+.section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--overlay-color); /* Use the defined overlay color */
+    z-index: -1; /* Place it behind the section content, but above the body overlay */
+}
+
+/* Specific Section Overlay Adjustments (Optional) */
+/* These overlays will now be *behind* the canvas at z-index: -1 */
+.hero-section::before {
+    background-color: rgba(0, 0, 0, 0.5); /* Slightly less dark for the hero */
+}
+
+.team-section::before {
+    background-color: rgba(0, 0, 0, 0.8); /* Darker overlay for team section */
+}
+
+.contact-section::before, .join-section::before {
+     background-color: rgba(75, 0, 130, 0.7); /* Overlay using secondary color */
+}
+
+
+/* Call to Action Button Styling */
+.cta-button {
+    display: inline-block; /* Allows padding and margins */
+    background-color: var(--accent-color);
+    color: var(--text-color-dark); /* Dark text on bright button */
+    padding: 12px 25px;
+    margin-top: 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease; /* Smooth transitions */
+    font-size: 1.1rem;
+    font-weight: bold;
+    border: none; /* Remove default button border */
+    cursor: pointer;
+    box-shadow: 0 0 10px var(--accent-color); /* Glow effect */
+}
+
+.cta-button:hover {
+    background-color: #2FFF00; /* Slightly brighter green on hover */
+    transform: translateY(-2px); /* Slight lift effect on hover */
+    box-shadow: 0 0 15px var(--accent-color); /* Stronger glow */
+    text-decoration: none;
+}
+
+
+/* --- Specific Section Styling --- */
+
+/* Hero Section */
+.hero-section {
+    color: var(--text-color-light);
+    padding: 100px 0; /* More padding for a prominent hero */
+    display: flex; /* Use flexbox to align content and image/3D */
+    align-items: center;
+    min-height: 90vh; /* Minimum height is 90% of the viewport height */
+    justify-content: space-around; /* Space out content and visual */
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    position: relative; /* Ensure children with absolute positioning are relative to this section */
+    /* overflow: hidden; /* Hide anything that flows outside the hero section - removed as canvas is full background */
+}
+
+.hero-content {
+    max-width: 600px;
+    margin-bottom: 40px; /* Space between content and visual on smaller screens */
+    text-align: left; /* Align hero text left */
+    z-index: 2; /* Ensure hero content is above the canvas */
+    position: relative; /* Needed for z-index to work */
+}
+
+.hero-section h1 {
+    color: var(--primary-color);
+    font-size: 3.5rem;
+    margin-bottom: 10px;
+    text-shadow: 0 0 10px var(--primary-color); /* Stronger glow */
+}
+
+.hero-section .tagline {
+    font-size: 1.8rem;
+    opacity: 0.9;
+    color: var(--text-color-light);
+    margin-bottom: 20px;
+}
+
+/* Removed .hero-visual styling as canvas is now full background */
+/*
+.hero-visual {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    z-index: 0;
+    pointer-events: none;
+}
+*/
+
+
+/* About Section */
+.about-section {
+    color: var(--text-color-light);
+}
+
+.about-section h2 {
+    margin-bottom: 30px;
+    color: var(--primary-color);
+}
+
+.about-section p {
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    max-width: 800px; /* Limit paragraph width for readability */
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left; /* Align text left within the limited width */
+    color: var(--text-color-light);
+}
+
+
+/* Team Section */
+.team-section {
+    color: var(--text-color-light);
+}
+
+.team-section h2 {
+    color: var(--primary-color);
+    margin-bottom: 40px;
+}
+
+.team-grid {
+    display: grid; /* Use CSS Grid for a flexible layout */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Create responsive columns */
+    gap: 30px; /* Space between grid items */
+}
+
+.team-member-card {
+    background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent dark card background */
+    color: var(--text-color-light);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.2); /* Subtle glow */
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Add hover effect */
+    border: 1px solid rgba(0, 255, 255, 0.3); /* Subtle border */
+}
+
+.team-member-card:hover {
+    transform: translateY(-5px); /* Lift card on hover */
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.5); /* Stronger glow on hover */
+}
+
+
+.team-member-card img {
+    width: 120px; /* Fixed size for team photos */
+    height: 120px;
+    border-radius: 50%; /* Make images circular */
+    object-fit: cover; /* Crop image to fit without stretching */
+    margin-bottom: 15px;
+    border: 4px solid var(--accent-color); /* Add an accent border */
+    box-shadow: 0 0 8px var(--accent-color); /* Subtle glow on image border */
+}
+
+.team-member-card h3 {
+    margin-bottom: 5px;
+    color: var(--primary-color);
+    text-shadow: none; /* Remove glow from card headings */
+}
+
+.team-member-card p {
+    font-size: 0.95rem;
+    color: var(--text-color-light);
+    opacity: 0.8;
+}
+
+
+/* Events Section */
+.events-section {
+    color: var(--text-color-light);
+}
+
+.events-section h2 {
+    margin-bottom: 40px;
+    color: var(--primary-color);
+}
+
+.events-grid {
+    display: grid;
+     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.event-card {
+    background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent dark card background */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.2); /* Subtle glow */
+    text-align: left; /* Align text left within event card */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex; /* Use flexbox for internal layout */
+    flex-direction: column; /* Stack content vertically */
+    border: 1px solid rgba(0, 255, 255, 0.3); /* Subtle border */
+}
+
+.event-card:hover {
+     transform: translateY(-5px);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.5); /* Stronger glow on hover */
+}
+
+.event-card img {
+    width: 100%; /* Make image fill the card width */
+    height: 280px; /* Fixed height for event banner */
+    object-fit: cover;
+    border-radius: 5px;
+    border: 2px solid var(--accent-color); /* Accent border */
+}
+
+.event-card h3 {
+    margin-bottom: 10px;
+    color: var(--primary-color);
+     text-shadow: none; /* Remove glow from card headings */
+}
+
+.event-card p {
+     margin-bottom: 10px;
+    font-size: 1rem;
+    color: var(--text-color-light);
+    opacity: 0.9;
+}
+
+.event-card .cta-button {
+    align-self: flex-start; /* Align button to the left */
+    margin-top: auto; /* Push button to the bottom if card heights vary */
+    font-size: 1rem;
+    padding: 10px 20px;
+}
+
+
+/* Contact & Join Us Sections */
+.contact-section, .join-section {
+    color: var(--text-color-light);
+}
+
+.contact-section h2, .join-section h2 {
+    color: var(--primary-color);
+    margin-bottom: 20px;
+}
+
+.contact-section p, .join-section p {
+    margin-bottom: 30px;
+    font-size: 1.1rem;
+    color: var(--text-color-light);
+}
+
+.contact-section form, .join-section form {
+    max-width: 600px; /* Limit form width */
+    margin: 0 auto; /* Center the form */
+    text-align: left; /* Align form elements left */
+    background-color: rgba(75, 0, 130, 0.5); /* Semi-transparent secondary color background */
+    padding: 30px;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 255, 255, 0.3); /* Subtle border */
+    box-shadow: 0 0 15px rgba(75, 0, 130, 0.5); /* Subtle glow */
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block; /* Label on its own line */
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: var(--text-color-light);
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group textarea {
+    width: 100%; /* Make input fill the container */
+    padding: 12px;
+    border: 1px solid rgba(0, 255, 255, 0.3); /* Border matching primary glow */
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.4); /* Dark input background */
+    color: var(--text-color-light);
+    font-size: 1rem;
+    font-family: 'Roboto Mono', monospace; /* Use body font for inputs */
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="email"]:focus,
+.form-group textarea:focus {
+    outline: none; /* Remove default outline */
+    border-color: var(--accent-color); /* Highlight border on focus */
+    box-shadow: 0 0 8px var(--accent-color); /* Add a subtle glow */
+    background-color: rgba(0, 0, 0, 0.6); /* Slightly darker on focus */
+}
+
+.contact-section form button, .join-section form button {
+    width: 100%; /* Make button full width */
+    background-color: var(--accent-color);
+    color: var(--text-color-dark);
+    padding: 15px;
+    border: none;
+    border-radius: 4px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    font-family: 'Orbitron', sans-serif; /* Use heading font for buttons */
+    box-shadow: 0 0 10px var(--accent-color); /* Glow effect */
+}
+
+.contact-section form button:hover, .join-section form button:hover {
+     background-color: #2FFF00; /* Slightly brighter green */
+     box-shadow: 0 0 15px var(--accent-color); /* Stronger glow */
+}
+
+.note {
+    margin-top: 20px;
+    font-size: 0.9rem;
+    opacity: 0.8;
+    text-align: center;
+    color: var(--text-color-light);
+}
+
+
+/* Footer Styling */
+footer {
+    background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent dark background */
+    color: var(--text-color-light);
+    text-align: center;
+    padding: 30px 0;
+    font-size: 0.9rem;
+    border-top: 1px solid rgba(0, 255, 255, 0.2); /* Subtle top border */
+    backdrop-filter: blur(5px); /* Optional: Add blur */
+}
+
+footer p {
+    margin-bottom: 5px;
+}
+
+
+/* --- Responsiveness --- */
+
+/* Apply styles for smaller screens (e.g., phones) */
+@media (max-width: 768px) {
+    header .container {
+        flex-direction: column; /* Stack header elements vertically */
+    }
+
+    header h1 {
+        margin-bottom: 10px;
+    }
+
+    header nav ul {
+        flex-direction: column; /* Stack nav links vertically */
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    header nav ul li {
+        margin: 5px 0;
+    }
+
+    .section {
+        padding: 60px 0; /* Reduce padding on smaller screens */
+    }
+
+    .hero-section {
+        flex-direction: column; /* Stack hero content and visual */
+        min-height: auto; /* Allow hero height to adjust */
+    }
+
+     .hero-content {
+        margin-bottom: 40px; /* Space below content */
+        text-align: center; /* Center text on small screens */
+     }
+
+    .hero-section h1 {
+        font-size: 2.5rem; /* Adjust font size */
+    }
+
+    .hero-section .tagline {
+        font-size: 1.4rem;
+    }
+
+
+    .about-section p {
+        text-align: center; /* Center about text on small screens */
+    }
+
+
+    .team-grid, .events-grid {
+         grid-template-columns: 1fr; /* One column on small screens */
+         gap: 20px;
+    }
+
+    .team-member-card, .event-card {
+        padding: 15px;
+    }
+
+    .team-member-card img {
+        width: 100px;
+        height: 100px;
+    }
+
+    .event-card .cta-button {
+        align-self: center; /* Center button on small screens */
+    }
+
+    .contact-section form, .join-section form {
+        padding: 20px;
+    }
+}
+
+/* Apply styles for even smaller screens (e.g., older phones) */
+@media (max-width: 480px) {
+    .container {
+        padding: 0 15px; /* Reduce horizontal padding */
+    }
+
+    .section {
+        padding: 40px 0;
+    }
+
+     .hero-section h1 {
+        font-size: 2rem;
+    }
+
+    .hero-section .tagline {
+        font-size: 1.2rem;
+    }
+
+    .cta-button {
+        padding: 10px 20px;
+        font-size: 1rem;
+    }
+
+    footer {
+        padding: 20px 0;
+    }
+
+    header h1 a {
+        font-size: 1.5rem;
+    }
+}
